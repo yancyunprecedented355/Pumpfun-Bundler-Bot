@@ -1,0 +1,36 @@
+{
+  "paths": {
+    "mintKeypairBs58": "",
+    "lpWalletPrivateKeyBs58": "",
+    "bundlerProviderPrivateKeyBs58": ""
+  },
+  "mintPrivateKeyBs58": "",
+  "token": {
+    "name": "",
+    "symbol": "",
+    "description": "",
+    "showName": "",
+    "createOn": "Pump.fun",
+    "twitter": "https://x.com",
+    "telegram": "https://t.me",
+    "website": "https://",
+    "image": "./src/image/2.jpg"
+  },
+  "lpWalletPrivateKeyBs58": "",
+  "bundlerProviderPrivateKeyBs58": "",
+  "batchSize": 4,
+  "bundleWalletNum": 16,
+  "bundlerHoldingPercent": 0.1,
+  "walletCreateInterval": 3,
+  "walletTransferInterval": 4,
+  "holderTokenTransferInterval": 5,
+  "holderTokenAmountMax": 1.1,
+  "holderTokenAmountMin": 0.4,
+  "distNum": 1,
+  "remaining_token_percent": 19,
+  "bundlerWalletName": "bundlers",
+  "holderWalletName": "holders",
+  "extra_sol_amount": 0.002,
+  "PRIORITY_FEE": 0.00002,
+  "holderCreateInterval": 2
+}
